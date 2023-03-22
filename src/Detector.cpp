@@ -62,7 +62,10 @@ void Detector::start() {
                    cameraNamespace + "/image_rect_color");
 
   if (referenceFrame.empty())
+  {
+    ROS_ERROR("reference frame is empty");
     referenceFrame = cameraFrame;
+  }
 
   broadcaster = std::make_unique<tf2_ros::TransformBroadcaster>();
   listener = std::make_unique<tf2_ros::TransformListener>(buffer);

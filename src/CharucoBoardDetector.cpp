@@ -13,6 +13,9 @@ void CharucoBoardDetector::startImpl() {
   nh.getParam("square_size", squareSideLengthMeters);
   nh.getParam("square_number_x", squareNumberX);
   nh.getParam("square_number_y", squareNumberY);
+  nh.getParam("square_number_y", squareNumberY);
+  nh.getParam("camera_namespace", cameraNamespace);
+
 
   string dictionaryIdString;
   nh.getParam("dictionary", dictionaryIdString);
@@ -64,7 +67,7 @@ void CharucoBoardDetector::onImageImpl(const sensor_msgs::ImageConstPtr &img) {
 
     geometry_msgs::TransformStamped cameraToBoardStamped;
     cameraToBoardStamped.header = hdr;
-    cameraToBoardStamped.child_frame_id = "board";
+    cameraToBoardStamped.child_frame_id = cameraNamespace + "/board";
     cameraToBoardStamped.transform = tf2::toMsg(cameraToBoard);
 
     broadcaster->sendTransform(cameraToBoardStamped);
@@ -75,10 +78,15 @@ void CharucoBoardDetector::onImageImpl(const sensor_msgs::ImageConstPtr &img) {
     Mat imageOutput(image->image);
 
     if (boardDetected) {
+      ROS_ERROR("board detected");
 
       aruco::drawAxis(imageOutput, cameraParameters->cameraMatrix,
                       cameraParameters->distorsionCoeff, rvec, tvec,
                       squareSideLengthMeters * 0.75f);
+    }
+    else
+    {
+      ROS_ERROR("no board");
     }
 
     cv_bridge::CvImage imageOutputBridge;
