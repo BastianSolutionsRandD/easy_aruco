@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <launch>
     <arg name="camera_name" default="tote0"/>
     <arg name="camera_namespace" default="/$(arg camera_name)_camera/color" doc="The topic namespace containing the camera's camera_info and image_rect_color topics" />

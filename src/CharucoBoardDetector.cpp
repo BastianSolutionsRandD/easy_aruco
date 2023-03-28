@@ -14,7 +14,7 @@ void CharucoBoardDetector::startImpl() {
   nh.getParam("square_number_x", squareNumberX);
   nh.getParam("square_number_y", squareNumberY);
   nh.getParam("square_number_y", squareNumberY);
-  nh.getParam("camera_namespace", cameraNamespace);
+  nh.getParam("camera_name", cameraName);
 
 
   string dictionaryIdString;
@@ -67,7 +67,7 @@ void CharucoBoardDetector::onImageImpl(const sensor_msgs::ImageConstPtr &img) {
 
     geometry_msgs::TransformStamped cameraToBoardStamped;
     cameraToBoardStamped.header = hdr;
-    cameraToBoardStamped.child_frame_id = cameraNamespace + "/board";
+    cameraToBoardStamped.child_frame_id = cameraName + "/board";
     cameraToBoardStamped.transform = tf2::toMsg(cameraToBoard);
 
     broadcaster->sendTransform(cameraToBoardStamped);

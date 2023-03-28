@@ -19,7 +19,7 @@ protected:
   float squareSideLengthMeters = -1;
   int squareNumberX = -1;
   int squareNumberY = -1;
-  std::string cameraNamespace;
+  std::string cameraName;
 
   void startImpl() override;
   void onImageImpl(const sensor_msgs::ImageConstPtr &img) override;
