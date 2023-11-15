@@ -7,7 +7,8 @@
 using namespace cv;
 using namespace std;
 
-void Detector::onCameraInfo(const sensor_msgs::CameraInfo &cam_info) {
+void Detector::onCameraInfo(const sensor_msgs::CameraInfo &cam_info)
+{
   // assumes that the image is undistorted!
   // assumes that the cameraFrame never moves wrt the referenceFrame!
 
@@ -34,24 +35,39 @@ void Detector::onCameraInfo(const sensor_msgs::CameraInfo &cam_info) {
 
   // now that everything is initialized, lookup extrinsic transform
   auto cameraToReferenceTransform = std::make_unique<tf2::Transform>();
-  tf2::fromMsg(
-      buffer.lookupTransform(referenceFrame, cameraFrame, ros::Time(0))
-          .transform,
-      *cameraToReferenceTransform);
-
+  bool found_valid_transform = false;
+  while (!found_valid_transform && nh.ok())
+  {
+    try
+    {
+      tf2::fromMsg(
+          buffer.lookupTransform(referenceFrame, cameraFrame, ros::Time(0))
+              .transform,
+          *cameraToReferenceTransform);
+      ROS_INFO("Found transform!");
+      break;
+    }
+    catch (tf2::LookupException t)
+    {
+      ROS_ERROR("not able to find the transform yet... trying again");
+      ros::Duration(1.0).sleep();
+    }
+  }
   cameraToReference = std::move(cameraToReferenceTransform);
 
   cameraInfoSubscriberOnce.shutdown();
 }
 
-void Detector::onImage(const sensor_msgs::ImageConstPtr &img) {
+void Detector::onImage(const sensor_msgs::ImageConstPtr &img)
+{
   if (!cameraParameters || !cameraToReference)
     return;
 
   onImageImpl(img);
 }
 
-void Detector::start() {
+void Detector::start()
+{
 
   nh.param<string>("camera_namespace", cameraNamespace, "/camera");
   nh.param<string>("camera_frame", cameraFrame, "camera_rgb_optical_frame");
