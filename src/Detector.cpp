@@ -86,7 +86,8 @@ void Detector::start()
   broadcaster = std::make_unique<tf2_ros::TransformBroadcaster>();
   listener = std::make_unique<tf2_ros::TransformListener>(buffer);
 
-  debugImagePublisher = nh.advertise<sensor_msgs::Image>("debug_image", 1);
+  debugImagePublisher = it.advertise("debug_image", 1, true);
+  // debugImagePublisher = nh.advertise<sensor_msgs::Image>("debug_image", 1);
   cameraInfoSubscriberOnce =
       nh.subscribe(cameraInfoTopic, 1, &Detector::onCameraInfo, this);
 

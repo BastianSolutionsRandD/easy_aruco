@@ -6,14 +6,14 @@
 #include <ros/ros.h>
 #include <sensor_msgs/CameraInfo.h>
 #include <sensor_msgs/Image.h>
-
+#include <image_transport/image_transport.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
 
 class Detector {
 public:
   explicit Detector(const ros::NodeHandle &nh)
-      : nh(nh) {}
+      : nh(nh), it(nh) {}
 
   void onCameraInfo(const sensor_msgs::CameraInfo &msg);
   void onImage(const sensor_msgs::ImageConstPtr &img);
@@ -37,6 +37,8 @@ protected:
 
   ros::Subscriber imageSubscriber;
   ros::Subscriber cameraInfoSubscriberOnce;
-  ros::Publisher debugImagePublisher;
+  // ros::Publisher debugImagePublisher;
+  image_transport::ImageTransport it;
+  image_transport::Publisher debugImagePublisher;
   std::unique_ptr<CameraParameters> cameraParameters;
 };
