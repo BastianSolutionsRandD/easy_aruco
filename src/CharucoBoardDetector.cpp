@@ -61,6 +61,9 @@ void CharucoBoardDetector::onImageImpl(const sensor_msgs::ImageConstPtr &img) {
   if (boardDetected) {
     tf2::Transform cameraToBoard =
         rotationAndTranslationVectorsToTransform(rvec, tvec);
+    
+    cv::aruco::drawDetectedCornersCharuco(image->image, charucoCorners, charucoIds, cv::Scalar(255, 0, 0));
+
     if (referenceFrame != cameraFrame) {
       cameraToBoard = *cameraToReference * cameraToBoard;
     }
