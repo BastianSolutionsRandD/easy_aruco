@@ -81,7 +81,7 @@ void CharucoBoardDetector::onImageImpl(const sensor_msgs::ImageConstPtr &img) {
     Mat imageOutput(image->image);
 
     if (boardDetected) {
-      ROS_ERROR("board detected");
+      ROS_DEBUG("board detected");
 
       aruco::drawAxis(imageOutput, cameraParameters->cameraMatrix,
                       cameraParameters->distorsionCoeff, rvec, tvec,
@@ -89,7 +89,7 @@ void CharucoBoardDetector::onImageImpl(const sensor_msgs::ImageConstPtr &img) {
     }
     else
     {
-      ROS_ERROR("no board");
+      ROS_DEBUG("no board");
     }
 
     cv_bridge::CvImage imageOutputBridge;
